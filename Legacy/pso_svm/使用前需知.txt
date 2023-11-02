@@ -1,3 +1,0 @@
-如果要使用比较均匀的优化策略，请将 Classfier.py 文件中第19行中 self.opt_mode 参数设置为 'mul'
-如果要使用专注于总精度的优化策略，将self.opt_mode 参数设置为 'ac'
-最好都尝试一下。

@@ -1,6 +1,0 @@
-Time of SVM:14381.021082162857
-Time of classification:9.821977615356445
-Time of ALL:14612.517593383789
-
-par:30
-iter:50Time of SVM:Time of SVM:0.0
