@@ -1,0 +1,111 @@
+---------------------------Fold 1 --------------------------------
+---------------------------Fold 1 --------------------------------
+---------------------------Fold 1 --------------------------------
+---------------------------Fold 1 --------------------------------
+---------------------------Fold 1 --------------------------------
+---------------------------Fold 1 --------------------------------
+---------------------------Fold 1 --------------------------------
+training result -------------- accuracy: 0.798   feature_num£º6429
+Health accuracy: 0.969
+cancer in stomach accuracy: 0.636
+cancer in colon accuracy: 0.722
+cancer in kidney accuracy: 0.571
+cancer in pancreas accuracy: 0.889
+cancer in lung accuracy: 0.667
+cancer in breast accuracy: 0.750
+------------optimized_prediction_list---------------
+exampleID      prediction      ground_truth
+N162        Health          Health
+CR4700_L1        Health          cancer in stomach
+N43        Health          Health
+PR246_L1        cancer in lung          cancer in lung
+N42        Health          Health
+N154_L2        Health          Health
+GR69_L1        cancer in stomach          cancer in stomach
+P9_L1        Health          Health
+N173        cancer in lung          Health
+T177_L1        cancer in lung          cancer in lung
+T363_L1        cancer in colon          cancer in colon
+PR659_L2        cancer in pancreas          cancer in pancreas
+T496_L1        cancer in breast          cancer in breast
+N182        Health          Health
+T432_L1        cancer in stomach          cancer in stomach
+T179_L2        cancer in lung          cancer in lung
+T570        cancer in stomach          cancer in stomach
+GR159        cancer in stomach          cancer in stomach
+PR191        cancer in pancreas          cancer in kidney
+T530        cancer in breast          cancer in breast
+N174        Health          Health
+T474_L1        cancer in stomach          cancer in stomach
+T30_L1        Health          cancer in colon
+C12        cancer in lung          cancer in colon
+T62_L1        cancer in colon          cancer in colon
+T563_L1        cancer in breast          cancer in breast
+PR529        cancer in pancreas          cancer in pancreas
+P15_L1        Health          Health
+N225        Health          Health
+T91_L2        cancer in colon          cancer in colon
+T471_L1        cancer in stomach          cancer in colon
+CR4658        cancer in stomach          cancer in colon
+GR107_L1        Health          cancer in stomach
+T771_L1        cancer in colon          cancer in colon
+T319_L2        cancer in colon          cancer in colon
+T717_L1        cancer in colon          cancer in colon
+N133_L1        Health          Health
+PR206_L1        cancer in pancreas          cancer in pancreas
+N50_L4        Health          Health
+N216        Health          Health
+PR937_L1        Health          cancer in breast
+N223        Health          Health
+T357_L1        Health          cancer in colon
+PR869_L1        cancer in breast          cancer in breast
+N179_L2        Health          Health
+T187_L2        cancer in lung          cancer in lung
+PR527_L1        cancer in pancreas          cancer in pancreas
+N64_L1        Health          Health
+T223_L2        cancer in colon          cancer in colon
+T634_L1        cancer in kidney          cancer in kidney
+T567_L1        cancer in breast          cancer in breast
+PR314_L2        cancer in pancreas          cancer in breast
+T401        Health          cancer in lung
+PR489        cancer in pancreas          cancer in pancreas
+PR52_L1        cancer in colon          cancer in pancreas
+N137_L1        Health          Health
+N25_L1        Health          Health
+T802_L2        cancer in pancreas          cancer in pancreas
+PR925        cancer in pancreas          cancer in pancreas
+CR4723_L1        cancer in colon          cancer in colon
+N70_L1        Health          Health
+C11        cancer in colon          cancer in colon
+N72_L1        Health          Health
+PR956        cancer in kidney          cancer in kidney
+N143_L2        Health          Health
+T503_L1        cancer in stomach          cancer in stomach
+T56_L1        cancer in colon          cancer in colon
+GR100        cancer in stomach          cancer in stomach
+T575_L4        cancer in kidney          cancer in kidney
+PR914_L2        cancer in breast          cancer in breast
+N197_L1        Health          Health
+N187        Health          Health
+N149_L2        Health          Health
+N181        Health          Health
+C21        cancer in colon          cancer in colon
+N205        Health          Health
+N155_L2        Health          Health
+N206        Health          Health
+T375_L4        cancer in pancreas          cancer in pancreas
+T89_L1        cancer in lung          cancer in lung
+T352_L1        cancer in stomach          cancer in lung
+T83_L4        cancer in lung          cancer in lung
+T501_L4        cancer in lung          cancer in stomach
+T555        cancer in colon          cancer in stomach
+P10_L1        Health          Health
+N138_L1        Health          Health
+N191_L1        Health          Health
+T746_L1        cancer in colon          cancer in kidney
+PR241_L1        cancer in colon          cancer in lung
+T258_L1        cancer in colon          cancer in colon
+T759_L1        cancer in colon          cancer in kidney
+N47_L4        Health          Health
+T529_L4        cancer in kidney          cancer in kidney
+T673_L1        cancer in colon          cancer in colon

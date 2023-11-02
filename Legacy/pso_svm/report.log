@@ -1,0 +1,57 @@
+2021-09-02 22:00:21,737 - pyswarms.discrete.binary - INFO - Optimize for 50 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2021-09-02 22:00:21,862 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2021-09-02 22:01:24,356 - pyswarms.discrete.binary - INFO - Optimize for 50 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2021-09-02 22:01:24,457 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2021-09-02 22:01:57,869 - pyswarms.discrete.binary - INFO - Optimize for 50 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2021-09-02 22:01:57,975 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2021-09-02 22:48:24,961 - pyswarms.discrete.binary - INFO - Optimization finished | best cost: 0.29011042944785276, best pos: [1 0 0 ... 1 0 0]
+2021-09-07 13:36:32,659 - pyswarms.discrete.binary - INFO - Optimize for 50 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2021-09-07 13:36:32,749 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2021-09-07 13:51:23,392 - pyswarms.discrete.binary - INFO - Optimize for 50 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2021-09-07 13:51:23,491 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2021-09-07 13:54:02,220 - pyswarms.discrete.binary - INFO - Optimize for 3 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2021-09-07 13:54:02,314 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2021-09-07 13:56:22,322 - pyswarms.discrete.binary - INFO - Optimization finished | best cost: 0.37354486034684387, best pos: [1 0 1 ... 0 1 1]
+2021-09-07 13:58:22,163 - pyswarms.discrete.binary - INFO - Optimize for 3 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2021-09-07 13:58:22,254 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2021-09-07 14:00:41,105 - pyswarms.discrete.binary - INFO - Optimization finished | best cost: 0.3802758614437625, best pos: [0 1 0 ... 0 0 1]
+2021-09-07 15:23:54,804 - pyswarms.discrete.binary - INFO - Optimize for 3 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2021-09-07 15:23:54,900 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2021-09-07 15:24:54,014 - pyswarms.discrete.binary - INFO - Optimize for 3 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2021-09-07 15:24:54,107 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2021-09-07 15:25:44,040 - pyswarms.discrete.binary - INFO - Optimize for 3 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2021-09-07 15:25:44,137 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2021-09-07 15:27:59,071 - pyswarms.discrete.binary - INFO - Optimization finished | best cost: 0.3938401218395598, best pos: [0 0 1 ... 1 1 0]
+2021-09-07 15:37:34,031 - pyswarms.discrete.binary - INFO - Optimize for 3 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2021-09-07 15:37:34,123 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2021-09-07 15:39:49,228 - pyswarms.discrete.binary - INFO - Optimization finished | best cost: 0.5377108077920951, best pos: [0 1 1 ... 0 1 0]
+2021-09-07 15:43:45,658 - pyswarms.discrete.binary - INFO - Optimize for 50 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2021-09-07 15:43:45,756 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2021-09-10 09:20:01,791 - pyswarms.discrete.binary - INFO - Optimize for 40 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2021-09-10 09:20:01,903 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2021-09-10 12:15:16,477 - pyswarms.discrete.binary - INFO - Optimization finished | best cost: 0.421354536748324, best pos: [1 0 0 ... 1 0 1]
+2021-09-18 21:04:03,703 - pyswarms.discrete.binary - INFO - Optimize for 5 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2021-09-18 21:04:04,017 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2021-09-18 21:09:25,558 - pyswarms.discrete.binary - INFO - Optimization finished | best cost: 0.5025779713410199, best pos: [0 1 0 ... 1 1 1]
+2021-09-28 14:02:03,252 - pyswarms.discrete.binary - INFO - Optimize for 10 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2021-09-28 14:02:03,388 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2021-09-28 14:09:17,836 - pyswarms.discrete.binary - INFO - Optimization finished | best cost: 0.453956167089156, best pos: [1 0 1 ... 1 0 1]
+2021-09-28 14:09:29,605 - pyswarms.discrete.binary - INFO - Optimize for 10 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2021-09-28 14:17:31,363 - pyswarms.discrete.binary - INFO - Optimization finished | best cost: 0.418194636322033, best pos: [1 1 1 ... 0 0 0]
+2021-09-29 14:45:15,511 - pyswarms.discrete.binary - INFO - Optimize for 5 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2021-09-29 14:45:15,841 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2021-10-27 15:22:32,977 - pyswarms.discrete.binary - INFO - Optimize for 100 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2021-10-27 15:22:33,250 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-05-03 11:32:39,106 - pyswarms.discrete.binary - INFO - Optimize for 100 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2022-05-03 11:32:39,271 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-05-03 11:40:25,915 - pyswarms.discrete.binary - INFO - Optimize for 100 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2022-05-03 11:40:26,024 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-05-03 15:01:36,044 - pyswarms.discrete.binary - INFO - Optimize for 20 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2022-05-03 15:01:36,149 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2022-05-03 16:34:03,883 - pyswarms.discrete.binary - INFO - Optimize for 20 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2022-05-03 16:34:03,988 - numexpr.utils - INFO - NumExpr defaulting to 8 threads.
+2023-10-31 15:41:30,311 - pyswarms.discrete.binary - INFO - Optimize for 20 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2023-10-31 16:17:40,866 - pyswarms.discrete.binary - INFO - Optimization finished | best cost: 0.40496351097970185, best pos: [0 1 1 ... 0 1 1]
+2023-11-02 15:39:49,883 - pyswarms.discrete.binary - INFO - Optimize for 20 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2023-11-02 15:42:07,467 - pyswarms.discrete.binary - INFO - Optimize for 10 iters with {'c1': 1.1931471805599454, 'c2': 1.1931471805599454, 'w': 0.7213475204444817, 'k': 3, 'p': 2}
+2023-11-02 15:46:33,245 - pyswarms.discrete.binary - INFO - Optimization finished | best cost: 0.37541562725501, best pos: [1 1 0 ... 0 1 0]
