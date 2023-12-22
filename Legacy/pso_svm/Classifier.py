@@ -1,6 +1,6 @@
 import pandas as pd 
 import numpy as np
-import src.RNAData.HUST.HUST_dataprocess as HUST
+import src.HUST_dataprocess as HUST
 from sklearn.metrics import precision_score
 from src.utility.data_func import CancerTypeDic
 import warnings

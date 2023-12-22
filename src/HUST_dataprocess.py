@@ -3,7 +3,7 @@ import re
 from sklearn.model_selection import train_test_split
 
 import matplotlib.pyplot as plt
-from src.utility.data_func import CancerTypeDic
+from utility.data_func import CancerTypeDic
 
 class HUSTData:
     def __init__(self):

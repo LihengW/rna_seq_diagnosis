@@ -5,7 +5,7 @@ import numpy as np
 
 class GraphData_Hust:
     def __init__(self):
-        from src.RNAData.HUST.HUST_dataprocess import NewHustData
+        from src.HUST_dataprocess import NewHustData
         self.hust_data = NewHustData()
         x = self.hust_data.data
         labels = x.loc[:, "Label"].array
@@ -18,7 +18,7 @@ class GraphData_Hust:
         x = torch.tensor(x.to_numpy().astype(float)).float()
 
         try:
-            edge_index = pd.read_csv("src/graph/NewHust_graph.csv")
+            edge_index = pd.read_csv("graph/NewHust_graph.csv")
         except:
             edge_index = pd.read_csv("graph/NewHust_graph.csv")
 
@@ -54,7 +54,7 @@ class GraphData_Hust:
 
 class GraphData_GSE:
     def __init__(self):
-        from src.RNAData.GSE.TEP_dataprocess import GSEData
+        from src.TEP_dataprocess import GSEData
         self.gse_data = GSEData()
         x = self.gse_data.data
         labels = x.loc[:, "Label"].array
@@ -67,7 +67,7 @@ class GraphData_GSE:
         x = torch.tensor(x.to_numpy().astype(float)).float()
 
         try:
-            edge_index = pd.read_csv("src/graph/GSE_graph.csv")
+            edge_index = pd.read_csv("graph/GSE_graph.csv")
         except:
             edge_index = pd.read_csv("graph/GSE_graph.csv")
 

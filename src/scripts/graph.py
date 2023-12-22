@@ -2,8 +2,8 @@ import networkx as nx
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from src.RNAData.GSE.TEP_dataprocess import GSEData
-from src.RNAData.HUST.HUST_dataprocess import HUSTData
+from src.TEP_dataprocess import GSEData
+from src.HUST_dataprocess import HUSTData
 
 class Colorlist:
     def __init__(self):
