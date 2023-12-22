@@ -5,7 +5,7 @@ import numpy as np
 
 class GraphData_Hust:
     def __init__(self):
-        from src.HUST_dataprocess import NewHustData
+        from HUST_dataprocess import NewHustData
         self.hust_data = NewHustData()
         x = self.hust_data.data
         labels = x.loc[:, "Label"].array
@@ -54,7 +54,7 @@ class GraphData_Hust:
 
 class GraphData_GSE:
     def __init__(self):
-        from src.TEP_dataprocess import GSEData
+        from TEP_dataprocess import GSEData
         self.gse_data = GSEData()
         x = self.gse_data.data
         labels = x.loc[:, "Label"].array
