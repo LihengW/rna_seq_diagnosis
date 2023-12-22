@@ -1,5 +1,7 @@
 # Directories
 /.idea/
+/result/
+/src/figs
 
 # Files
 *.csv
@@ -7,3 +9,4 @@
 *.log
 *.xlsx
 *.zip
+

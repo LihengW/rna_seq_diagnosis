@@ -2,7 +2,7 @@ import itertools
 import matplotlib.pyplot as plt
 import numpy as np
 # 绘制混淆矩阵
-def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues):
+def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues, show=True):
     """
     - cm : 计算出的混淆矩阵的值
     - classes : 混淆矩阵中每一行每一列对应的列
@@ -33,4 +33,6 @@ def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix'
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
-    plt.show()
+
+    if show:
+        plt.show()
