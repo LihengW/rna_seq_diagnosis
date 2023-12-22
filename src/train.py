@@ -2,7 +2,7 @@ import torch
 import rna_model
 import dataset
 import numpy as np
-from Utility.plot import plot_confusion_matrix
+from utility import plot
 from sklearn.metrics import roc_curve, auc
 from scipy import interp
 import matplotlib.pyplot as plt
@@ -215,14 +215,14 @@ class Program:
         for x in range(len(test_pred)):
             idx_1, idx_2 = int(test_tar[x]), int(test_pred[x])
             cm[idx_1][idx_2] += 1
-        plot_confusion_matrix(cm, range(self.class_num), title="TEST Result", cmap=plt.get_cmap('cool'), show=not save_fig)
+        plot.plot_confusion_matrix(cm, range(self.class_num), title="TEST Result", cmap=plt.get_cmap('cool'), show=not save_fig)
         if save_fig:
             plt.savefig("figs/" + self.program_name + "_test_cm" + ".png", bbox_inches='tight', dpi=600, transparent=True)
             plt.clf()
         else:
             plt.show()
         if normalized:
-            plot_confusion_matrix(cm, range(self.class_num), title="TEST Result", cmap=plt.get_cmap('coolwarm'), show=not save_fig, normalize=True)
+            plot.plot_confusion_matrix(cm, range(self.class_num), title="TEST Result", cmap=plt.get_cmap('coolwarm'), show=not save_fig, normalize=True)
             if save_fig:
                 plt.savefig("figs/" + self.program_name + "_test_cm_normalized" + ".png", bbox_inches='tight', dpi=600,
                             transparent=True)
@@ -240,8 +240,8 @@ class Program:
             for x in range(len(train_pred)):
                 idx_1, idx_2 = int(train_tar[x]), int(train_pred[x])
                 cm[idx_1][idx_2] += 1
-            plot_confusion_matrix(cm, range(self.class_num), title="TRAIN Result", cmap=plt.get_cmap('cool'),
-                                  show=not save_fig)
+            plot.plot_confusion_matrix(cm, range(self.class_num), title="TRAIN Result", cmap=plt.get_cmap('cool'),
+                                       show=not save_fig)
             if save_fig:
                 plt.savefig("figs/" + self.program_name + "_train_cm" + ".png", bbox_inches='tight', dpi=600,
                             transparent=True)
@@ -249,8 +249,8 @@ class Program:
             else:
                 plt.show()
             if normalized:
-                plot_confusion_matrix(cm, range(self.class_num), title="TEST Result", cmap=plt.get_cmap('coolwarm'),
-                                      show=not save_fig, normalize=True)
+                plot.plot_confusion_matrix(cm, range(self.class_num), title="TEST Result", cmap=plt.get_cmap('coolwarm'),
+                                           show=not save_fig, normalize=True)
                 if save_fig:
                     plt.savefig("figs/" + self.program_name + "_train_cm_normalized" + ".png", bbox_inches='tight',
                                 dpi=600,

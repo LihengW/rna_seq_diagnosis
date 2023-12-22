@@ -5,7 +5,7 @@ import numpy as np
 
 class GraphData_Hust:
     def __init__(self):
-        from Dataset.HUST.HUST_dataprocess import HUSTData, NewHustData
+        from src.RNAData.HUST.HUST_dataprocess import NewHustData
         self.hust_data = NewHustData()
         x = self.hust_data.data
         labels = x.loc[:, "Label"].array
@@ -54,7 +54,7 @@ class GraphData_Hust:
 
 class GraphData_GSE:
     def __init__(self):
-        from Dataset.GSE.TEP_dataprocess import GSEData
+        from src.RNAData.GSE.TEP_dataprocess import GSEData
         self.gse_data = GSEData()
         x = self.gse_data.data
         labels = x.loc[:, "Label"].array

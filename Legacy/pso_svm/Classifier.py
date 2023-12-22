@@ -1,13 +1,8 @@
 import pandas as pd 
 import numpy as np
-import Dataset.GSE.TEP_dataprocess as GSE
-import Dataset.HUST.HUST_dataprocess as HUST
-import Utility.plot as PLOT
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
+import src.RNAData.HUST.HUST_dataprocess as HUST
 from sklearn.metrics import precision_score
-from Utility.data_func import CancerTypeDic
+from src.utility.data_func import CancerTypeDic
 import warnings
 from Timer import Timer
 
@@ -101,7 +96,7 @@ class Classifier():
 
             total_ac = sum_hit/sum_num
 
-            PLOT.plot_confusion_matrix(cm=cm, classes=labels,normalize=True)
+            plot.plot_confusion_matrix(cm=cm, classes=labels, normalize=True)
 
             print('FinalTest performance: %.3f' % (total_ac))
             print('FinalTest performance detail: ' + str(ac))
