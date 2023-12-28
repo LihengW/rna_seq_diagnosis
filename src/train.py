@@ -20,6 +20,8 @@ class Program:
                  program_name="program",
                  ):
         self.data = data
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.data.to(self.device)
         self.epoch = epoch
         self.model = model
         self.class_num = class_num
@@ -30,19 +32,12 @@ class Program:
         else:
             raise NotImplementedError
         self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=20)
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.program_name = program_name
 
     def run(self):
-        res = []
         for epoch in range(1, self.epoch):
             loss = self.train()
-            res.append(float(loss))
-            print(f'Epoch: {epoch:03d}, Loss: {loss:.4f}')
-        import matplotlib.pyplot as plt
-        plt.plot(range(len(res)), res)
-        plt.show()
-        print(self.test())
+            print(f'{self.program_name}: --- Epoch: {epoch:03d}, Loss: {loss:.4f}, Process: {epoch/self.epoch:.4f}')
 
     def train(self):
         self.model.train()
@@ -73,8 +68,8 @@ class Program:
 
         # TEST GRAPH
         # Use the class score
-        test_pred = out[self.data.test_mask].detach().numpy()
-        test_tar = self.data.y[self.data.test_mask].detach().numpy()
+        test_pred = out[self.data.test_mask].cpu().detach().numpy()
+        test_tar = self.data.y[self.data.test_mask].cpu().detach().numpy()
 
         fpr = dict()
         tpr = dict()
@@ -140,8 +135,8 @@ class Program:
         if train_data:
             # TRAIN GRAPH
             # Use the class score
-            train_pred = out[self.data.train_mask].detach().numpy()
-            train_tar = self.data.y[self.data.train_mask].detach().numpy()
+            train_pred = out[self.data.train_mask].cpu().detach().numpy()
+            train_tar = self.data.y[self.data.train_mask].cpu().detach().numpy()
 
             fpr = dict()
             tpr = dict()
@@ -207,8 +202,8 @@ class Program:
         self.model.eval()
         out = self.model(self.data)
         # Use the class with the highest probability.
-        test_pred = out[self.data.test_mask].argmax(dim=1)
-        test_tar = self.data.y[self.data.test_mask].argmax(dim=1)
+        test_pred = out[self.data.test_mask].cpu().argmax(dim=1)
+        test_tar = self.data.y[self.data.test_mask].cpu().argmax(dim=1)
         test_correct = test_pred == test_tar  # Check against ground-truth labels.
 
         cm = np.zeros((self.class_num, self.class_num), dtype=int)
@@ -232,8 +227,8 @@ class Program:
         test_acc = int(test_correct.sum()) / int(self.data.test_mask.sum())  # Derive ratio of correct predictions.
 
         if train_data:
-            train_pred = out[self.data.train_mask].argmax(dim=1)
-            train_tar = self.data.y[self.data.train_mask].argmax(dim=1)
+            train_pred = out[self.data.train_mask].cpu().argmax(dim=1)
+            train_tar = self.data.y[self.data.train_mask].cpu().argmax(dim=1)
             train_correct = train_pred == train_tar  # Check against ground-truth labels.
 
             cm = np.zeros((self.class_num, self.class_num), dtype=int)

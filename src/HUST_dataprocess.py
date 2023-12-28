@@ -80,7 +80,7 @@ class HUSTData:
 
 class NewHustData:
     def __init__(self):
-        self.data = pd.read_csv('RNAData/HUST/NewHust_ReconData.csv')
+        self.data = pd.read_csv('RNAData/HUST/HustDataFinal.csv')
         self.data.index = self.data.loc[:, "sampleId"]
         self.data.drop(columns="sampleId", inplace=True)
 

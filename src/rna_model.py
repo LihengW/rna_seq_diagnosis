@@ -129,8 +129,9 @@ class RNAModel(torch.nn.Module):
             return x
 
 class MixedModel(torch.nn.Module):
-    def __init__(self, model1, model2):
+    def __init__(self, model1, model2, name='default'):
         super(MixedModel, self).__init__()
+        self.name = name
         self.in_features = model1.in_features
         self.out_features = model2.out_features
         self.layers = torch.nn.Sequential(*(list(model1.layers.children()) + list(model2.layers.children())))
@@ -182,7 +183,7 @@ class FLATMLP(torch.nn.Module):
         return x
 
 class DownSamplingMLP(torch.nn.Module):
-    def __init__(self, in_features, top_hidden_channels, shrink_rate, out_features, layernum=3, active_function='relu', dropout=0.3):
+    def __init__(self, in_features, top_hidden_channels, out_features, shrink_rate=2, layernum=3, active_function='relu', dropout=0.3):
         super(DownSamplingMLP, self).__init__()
         # torch.manual_seed(12345)
         self.layers = torch.nn.Sequential()
@@ -264,6 +265,7 @@ class DownSamplingGATBlock(torch.nn.Module):
                 else:
                     self.layers.add_module("conv" + str(i+2), torch_geometric.nn.GATConv(hidden_channels * self.in_head, next_hidden_channels, heads=self.in_head, dropout=attention_dropout))
                 hidden_channels = next_hidden_channels
+        self.layers.add_module("softmax", torch.nn.Softmax(dim=1))
 
         self.top_hidden_channels = top_hidden_channels
         self.out_features = out_features
@@ -274,11 +276,11 @@ class DownSamplingGATBlock(torch.nn.Module):
     def forward(self, data):
         x, edge_index = data.x, data.edge_index
         x = self.layers[0](x, edge_index)
-        for i in range(int((len(self.layers) - 1) / 3)):
+        for i in range(int((len(self.layers) - 2) / 3)):
             x = self.layers[3 * i + 1](x)  # active
             x = self.layers[3 * i + 2](x)  # dropout
             x = self.layers[3 * i + 3](x, edge_index)
-
+        x = self.layers[len(self.layers) - 1](x)
         return x
 
 def ConnectModule(module1, module2):
