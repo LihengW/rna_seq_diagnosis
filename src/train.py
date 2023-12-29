@@ -27,6 +27,7 @@ class Program:
         self.class_num = class_num
         # criterion = torch.nn.MSELoss(reduction='mean')  # Define loss criterion.
         self.criterion = criterion
+        self.criterion.to(self.device)
         if optimizer == "SGD":
             self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate, momentum=0.9)
         else:

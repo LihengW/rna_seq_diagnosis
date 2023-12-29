@@ -9,9 +9,11 @@ else:
     device = torch.device("cpu")
 
 graph_data = dataset.GraphData_Hust()
+crossweight = torch.tensor([1, 2, 1, 1, 2, 1.5, 2, 2])
+crossweight.to(device)
 learning_rate = [0.001, 0.005, 0.01]
-dropout = 0.5
-epochs = [100000, 20000]
+dropout = 0.4
+epochs = [100000, 150000]
 
 # model = rna_model.DownSamplingMLP(graph_data.num_features, 256, 4, graph_data.num_classes, 3)
 # mlp_dict = {
@@ -32,7 +34,7 @@ epochs = [100000, 20000]
 # model = rna_model.MixedModel(mlp, gat)
 
 programs = []
-mlp = rna_model.DownSamplingMLP(in_features=graph_data.num_features, out_features=1024, top_hidden_channels=4096,layernum=3, dropout=dropout)
+mlp = rna_model.DownSamplingMLP(in_features=graph_data.num_features, out_features=512, top_hidden_channels=2048,layernum=3, dropout=dropout)
 gat = rna_model.DownSamplingGATBlock(
         in_features=mlp.out_features,out_features=graph_data.num_classes,
         top_hidden_channels=mlp.out_features, in_head=4,
@@ -45,6 +47,7 @@ for j in range(len(epochs)):
                        epoch=epochs[j],
                        model=mixed,
                        learning_rate=learning_rate[2],
+                       criterion=torch.nn.CrossEntropyLoss(weight=crossweight),
                        program_name=name)
     programs.append(new_prog)
 

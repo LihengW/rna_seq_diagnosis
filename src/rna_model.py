@@ -216,6 +216,8 @@ class DownSamplingMLP(torch.nn.Module):
                     self.layers.add_module("lin" + str(i+2), torch.nn.Linear(hidden_channels, next_hidden_channels))
                 hidden_channels = next_hidden_channels
 
+            self.layers.add_module("BatchNorm", torch.nn.BatchNorm1d(out_features))
+
         self.top_hidden_channels = top_hidden_channels
         self.out_features = out_features
         self.in_features = in_features
@@ -265,6 +267,7 @@ class DownSamplingGATBlock(torch.nn.Module):
                 else:
                     self.layers.add_module("conv" + str(i+2), torch_geometric.nn.GATConv(hidden_channels * self.in_head, next_hidden_channels, heads=self.in_head, dropout=attention_dropout))
                 hidden_channels = next_hidden_channels
+
         self.layers.add_module("softmax", torch.nn.Softmax(dim=1))
 
         self.top_hidden_channels = top_hidden_channels
