@@ -286,6 +286,167 @@ class DownSamplingGATBlock(torch.nn.Module):
         x = self.layers[len(self.layers) - 1](x)
         return x
 
+
+class SAGEBlock(torch.nn.Module):
+    def __init__(self, in_features, out_features,
+                 top_hidden_channels, shrink_rate=2, layernum=3,
+                aggr="mean",
+                 active_function='relu', dropout=0.3,
+                 ):
+        super(SAGEBlock, self).__init__()
+        self.layers = torch.nn.Sequential()
+
+        if pow(shrink_rate, layernum) > top_hidden_channels:
+            # shrink to one feature
+            raise ValueError
+
+        if layernum == 1:
+            self.layers.add_module("conv", torch_geometric.nn.SAGEConv(in_features, out_features, aggr=aggr))
+        else:
+            # input Linear Layer
+            hidden_channels = top_hidden_channels
+            self.layers.add_module("conv1", torch_geometric.nn.SAGEConv(in_features, hidden_channels, aggr=aggr))
+            # middle Layer
+            for i in range(layernum - 1):
+                # dropout and activation function
+                if active_function == 'relu':
+                    self.layers.add_module("Relu" + str(i+1), torch.nn.ReLU())
+                elif active_function == 'elu':
+                    self.layers.add_module("Elu" + str(i+1), torch.nn.ELU())
+
+                self.layers.add_module("dropout" + str(i + 1), torch.nn.Dropout(p=dropout))
+
+                # shrink to downsample
+                next_hidden_channels = int(hidden_channels / shrink_rate)
+                if i == layernum - 2:
+                    self.layers.add_module("conv" + str(layernum), torch_geometric.nn.SAGEConv(hidden_channels, out_features, aggr=aggr))
+                else:
+                    self.layers.add_module("conv" + str(i+2), torch_geometric.nn.SAGEConv(hidden_channels, next_hidden_channels, aggr=aggr))
+                hidden_channels = next_hidden_channels
+
+        self.layers.add_module("softmax", torch.nn.Softmax(dim=1))
+
+        self.top_hidden_channels = top_hidden_channels
+        self.out_features = out_features
+        self.in_features = in_features
+        self.active_function = active_function
+        print(self.layers)
+
+    def forward(self, data):
+        x, edge_index = data.x, data.edge_index
+        x = self.layers[0](x, edge_index)
+        for i in range(int((len(self.layers) - 2) / 3)):
+            x = self.layers[3 * i + 1](x)  # active
+            x = self.layers[3 * i + 2](x)  # dropout
+            x = self.layers[3 * i + 3](x, edge_index)
+        x = self.layers[len(self.layers) - 1](x)
+        return x
+
+class SAGEBlock(torch.nn.Module):
+    def __init__(self, in_features, out_features,
+                 top_hidden_channels, shrink_rate=2, layernum=3,
+                aggr="mean",
+                 active_function='relu', dropout=0.3,
+                 ):
+        super(SAGEBlock, self).__init__()
+        self.layers = torch.nn.Sequential()
+
+        if pow(shrink_rate, layernum) > top_hidden_channels:
+            # shrink to one feature
+            raise ValueError
+
+        if layernum == 1:
+            self.layers.add_module("conv", torch_geometric.nn.SAGEConv(in_features, out_features, aggr=aggr))
+        else:
+            # input Linear Layer
+            hidden_channels = top_hidden_channels
+            self.layers.add_module("conv1", torch_geometric.nn.SAGEConv(in_features, hidden_channels, aggr=aggr))
+            # middle Layer
+            for i in range(layernum - 1):
+                # dropout and activation function
+                if active_function == 'relu':
+                    self.layers.add_module("Relu" + str(i+1), torch.nn.ReLU())
+                elif active_function == 'elu':
+                    self.layers.add_module("Elu" + str(i+1), torch.nn.ELU())
+
+                self.layers.add_module("dropout" + str(i + 1), torch.nn.Dropout(p=dropout))
+
+                # shrink to downsample
+                next_hidden_channels = int(hidden_channels / shrink_rate)
+                if i == layernum - 2:
+                    self.layers.add_module("conv" + str(layernum), torch_geometric.nn.SAGEConv(hidden_channels, out_features, aggr=aggr))
+                else:
+                    self.layers.add_module("conv" + str(i+2), torch_geometric.nn.SAGEConv(hidden_channels, next_hidden_channels, aggr=aggr))
+                hidden_channels = next_hidden_channels
+
+        self.layers.add_module("softmax", torch.nn.Softmax(dim=1))
+
+        self.top_hidden_channels = top_hidden_channels
+        self.out_features = out_features
+        self.in_features = in_features
+        self.active_function = active_function
+        print(self.layers)
+
+    def forward(self, data):
+        x, edge_index = data.x, data.edge_index
+        x = self.layers[0](x, edge_index)
+        for i in range(int((len(self.layers) - 2) / 3)):
+            x = self.layers[3 * i + 1](x)  # active
+            x = self.layers[3 * i + 2](x)  # dropout
+            x = self.layers[3 * i + 3](x, edge_index)
+        x = self.layers[len(self.layers) - 1](x)
+        return x
+
+class ResGatedBlock(torch.nn.Module):
+    def __init__(self, in_features, out_features,
+                 top_hidden_channels, shrink_rate=2, layernum=3,
+                act=torch.nn.Sigmoid(),
+                 active_function='relu', dropout=0.3,
+                 ):
+        super(ResGatedBlock, self).__init__()
+        self.layers = torch.nn.Sequential()
+
+        if pow(shrink_rate, layernum) > top_hidden_channels:
+            # shrink to one feature
+            raise ValueError
+
+        if layernum == 1:
+            self.layers.add_module("conv", torch_geometric.nn.ResGatedGraphConv(in_features, out_features, act=act))
+        else:
+            # input Linear Layer
+            hidden_channels = top_hidden_channels
+            self.layers.add_module("conv1", torch_geometric.nn.ResGatedGraphConv(in_features, hidden_channels, act=act))
+            # middle Layer
+            for i in range(layernum - 1):
+                # dropout and function
+                self.layers.add_module("dropout" + str(i + 1), torch.nn.Dropout(p=dropout))
+                # shrink to downsample
+                next_hidden_channels = int(hidden_channels / shrink_rate)
+                if i == layernum - 2:
+                    self.layers.add_module("conv" + str(layernum), torch_geometric.nn.ResGatedGraphConv(hidden_channels, out_features, act=act))
+                else:
+                    self.layers.add_module("conv" + str(i+2), torch_geometric.nn.ResGatedGraphConv(hidden_channels, next_hidden_channels, act=act))
+                hidden_channels = next_hidden_channels
+
+        self.layers.add_module("softmax", torch.nn.Softmax(dim=1))
+
+        self.top_hidden_channels = top_hidden_channels
+        self.out_features = out_features
+        self.in_features = in_features
+        self.active_function = active_function
+        print(self.layers)
+
+    def forward(self, data):
+        x, edge_index = data.x, data.edge_index
+        x = self.layers[0](x, edge_index)
+        for i in range(int((len(self.layers) - 2) / 3)):
+            x = self.layers[3 * i + 1](x)  # active
+            x = self.layers[3 * i + 2](x)  # dropout
+            x = self.layers[3 * i + 3](x, edge_index)
+        x = self.layers[len(self.layers) - 1](x)
+        return x
+
+
 def ConnectModule(module1, module2):
     newmodule = RNAModel(module1.in_features, module2.out_features)
     RNAModel.layers = torch.nn.Sequential(*(list(module1.layers.children()) + list(module2.layers.children())))

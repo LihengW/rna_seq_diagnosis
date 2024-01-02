@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 
 class Program:
     def __init__(self,
-                 data=dataset.GraphData_Hust().data,
                  epoch=50000,
                  model=rna_model.GAT(),
                  criterion=torch.nn.CrossEntropyLoss(),
@@ -18,16 +17,24 @@ class Program:
                  learning_rate=0.01,
                  class_num=8,
                  program_name="program",
+                 loss_weighted=True
                  ):
-        self.data = data
+        self.graph_data = dataset.GraphData_Hust()
+        self.data = self.graph_data.data
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.data.to(self.device)
         self.epoch = epoch
         self.model = model
+        self.model.to(self.device)
         self.class_num = class_num
         # criterion = torch.nn.MSELoss(reduction='mean')  # Define loss criterion.
-        self.criterion = criterion
+        if loss_weighted:
+            self.criterion = torch.nn.CrossEntropyLoss(weight=torch.tensor(self.graph_data.class_weight).to(self.device))
+        else:
+            self.criterion = criterion
         self.criterion.to(self.device)
+
+        self.loss_record = []
         if optimizer == "SGD":
             self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate, momentum=0.9)
         else:
@@ -45,6 +52,7 @@ class Program:
         self.optimizer.zero_grad()  # Clear gradients.
         out = self.model(self.data)  # Perform a single forward pass.
         loss = self.criterion(out[self.data.train_mask], self.data.y[self.data.train_mask])  # Compute the loss solely based on the training nodes.
+        self.loss_record.append(float(loss))
         loss.backward()  # Derive gradients.
         self.optimizer.step()  # Update parameters based on gradients.
         self.scheduler.step()  # lr_scheduler updates
@@ -257,6 +265,14 @@ class Program:
             train_acc = int(train_correct.sum()) / int(self.data.train_mask.sum())  # Derive ratio of correct predictions.
 
         return test_acc, train_acc
+
+    def draw_loss(self):
+        plt.plot(list(range(len(self.loss_record))), self.loss_record)
+        plt.title("Loss")
+        plt.tight_layout()
+        plt.ylabel('loss')
+        plt.xlabel('epoch')
+        plt.savefig("figs/" + self.program_name + "loss_value", bbox_inches='tight', dpi=600, transparent=False)
 
 
 if __name__ == '__main__':

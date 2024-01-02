@@ -8,8 +8,15 @@ class GraphData_Hust:
         from HUST_dataprocess import NewHustData
         self.hust_data = NewHustData()
         x = self.hust_data.data
+
         labels = x.loc[:, "Label"].array
         self.num_classes = len(set(labels))
+        self.class_weight = [0]*self.num_classes
+        for i in labels:
+            self.class_weight[i] += 1
+        for j in range(self.num_classes):
+            self.class_weight[j] = 1 / self.class_weight[j] * 1000
+
         y = np.zeros((len(labels), self.num_classes))
         for i in range(len(labels)):
             y[i][labels[i]] = 1
