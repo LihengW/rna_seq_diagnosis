@@ -6,6 +6,7 @@ from utility import plot
 from sklearn.metrics import roc_curve, auc
 from scipy import interp
 import matplotlib.pyplot as plt
+from svm_classifier import SVM
 
 
 class Program:
@@ -29,14 +30,21 @@ class Program:
         self.class_num = class_num
         # criterion = torch.nn.MSELoss(reduction='mean')  # Define loss criterion.
         if loss_weighted:
-            self.criterion = torch.nn.CrossEntropyLoss(weight=torch.tensor(self.graph_data.class_weight).to(self.device))
+            weight_mask = {1: 1.5, 4: 1.5, 6: 1.5}
+            class_weight = self.graph_data.class_weight
+            for key in weight_mask.keys():
+                class_weight[key] *= weight_mask[key]
+            self.criterion = torch.nn.CrossEntropyLoss(weight=torch.tensor(class_weight).to(self.device))
         else:
             self.criterion = criterion
+
         self.criterion.to(self.device)
 
         self.loss_record = []
         if optimizer == "SGD":
             self.optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate, momentum=0.9)
+        elif optimizer == "Adam":
+            self.optimizer = torch.optim.Adam(self.model.parameters(), lr=learning_rate)
         else:
             raise NotImplementedError
         self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=20)
@@ -65,6 +73,63 @@ class Program:
         pred = out[self.data.test_mask].argmax(dim=1)  # Use the class with highest probability.
         tar = self.data.y[self.data.test_mask].argmax(dim=1)
         return out[self.data.test_mask]
+
+    def svm_predict(self):
+        svm_model = SVM()
+        self.model.eval()
+        out = self.model(self.data).cpu()
+        train_data = out[self.data.train_mask].detach().numpy()
+        target = self.graph_data.labels[self.data.train_mask.numpy()]
+        svm_model.fit(train_data, target)
+        res = svm_model.pred(out[self.data.test_mask.numpy()].detach().numpy())
+        acc = res == self.graph_data.labels[self.data.test_mask.numpy()]
+        acc = sum(acc) / len(acc)
+        print(acc)
+
+    def svm_predict_raw(self):
+        svm_model = SVM()
+        train_data = self.data.x[self.data.train_mask].detach().numpy()
+        target = self.graph_data.labels[self.data.train_mask.numpy()]
+        svm_model.fit(train_data, target)
+        res = svm_model.pred(self.data.x[self.data.test_mask.numpy()].detach().numpy())
+        acc = res == self.graph_data.labels[self.data.test_mask.numpy()]
+        acc = sum(acc) / len(acc)
+        print(acc)
+
+
+
+    def calculate_acc(self):
+        self.model.eval()
+        out = self.model(self.data)
+        pre_top1 = out[self.data.test_mask].argmax(dim=1)
+        pred_top3 = torch.topk(out[self.data.test_mask], k=3, dim=1).indices # Use the class with highest probability.
+        tar = self.data.y[self.data.test_mask].argmax(dim=1)
+
+        class_num = self.data.y[self.data.test_mask].size()[1]
+        top1_hit, num, top3_hit = [0]*class_num, [0]*class_num, [0]*class_num
+        for i in range(len(pre_top1)):
+            if tar[i] == pre_top1[i]:
+                top1_hit[tar[i]] += 1
+                top3_hit[tar[i]] += 1
+            elif tar[i] in pred_top3[i]:
+                top3_hit[tar[i]] += 1
+            else:
+                pass
+            num[tar[i]] += 1
+
+        for i in range(class_num):
+            top1_hit[i] = top1_hit[i] / num[i]
+            top3_hit[i] = top3_hit[i] / num[i]
+
+        plt.scatter(list(range(class_num)), top1_hit, s=30, cmap=plt.get_cmap("plasma"), alpha=0.7)
+        plt.scatter(list(range(class_num)), top3_hit, s=50, cmap=plt.get_cmap("inferno"), alpha=0.7)
+        plt.savefig("figs/" + self.program_name + "_test_acc" + ".png", bbox_inches='tight', dpi=600, transparent=False)
+        plt.clf()
+        print("---------------top3-----------------")
+        print(top3_hit)
+        print("---------------top1-----------------")
+        print(top1_hit)
+        print("---------------END------------------")
 
     def roc_curve(self, train_data=False, save_fig=False):
         # roc_curving
@@ -273,6 +338,7 @@ class Program:
         plt.ylabel('loss')
         plt.xlabel('epoch')
         plt.savefig("figs/" + self.program_name + "loss_value", bbox_inches='tight', dpi=600, transparent=False)
+        plt.clf()
 
 
 if __name__ == '__main__':

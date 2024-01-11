@@ -268,7 +268,8 @@ class DownSamplingGATBlock(torch.nn.Module):
                     self.layers.add_module("conv" + str(i+2), torch_geometric.nn.GATConv(hidden_channels * self.in_head, next_hidden_channels, heads=self.in_head, dropout=attention_dropout))
                 hidden_channels = next_hidden_channels
 
-        self.layers.add_module("softmax", torch.nn.Softmax(dim=1))
+        # self.layers.add_module("softmax", torch.nn.Softmax(dim=1))
+        self.layers.add_module("Sigmoid", torch.nn.Sigmoid())
 
         self.top_hidden_channels = top_hidden_channels
         self.out_features = out_features
@@ -324,7 +325,7 @@ class SAGEBlock(torch.nn.Module):
                     self.layers.add_module("conv" + str(i+2), torch_geometric.nn.SAGEConv(hidden_channels, next_hidden_channels, aggr=aggr))
                 hidden_channels = next_hidden_channels
 
-        self.layers.add_module("softmax", torch.nn.Softmax(dim=1))
+        self.layers.add_module("Sigmoid", torch.nn.Sigmoid())
 
         self.top_hidden_channels = top_hidden_channels
         self.out_features = out_features
@@ -379,7 +380,8 @@ class SAGEBlock(torch.nn.Module):
                     self.layers.add_module("conv" + str(i+2), torch_geometric.nn.SAGEConv(hidden_channels, next_hidden_channels, aggr=aggr))
                 hidden_channels = next_hidden_channels
 
-        self.layers.add_module("softmax", torch.nn.Softmax(dim=1))
+        # self.layers.add_module("softmax", torch.nn.Softmax(dim=1))
+        self.layers.add_module("Sigmoid", torch.nn.Sigmoid())
 
         self.top_hidden_channels = top_hidden_channels
         self.out_features = out_features
@@ -447,6 +449,53 @@ class ResGatedBlock(torch.nn.Module):
         return x
 
 
+# ---------------------- Complete Network ------------------------#
+
+class SAGENET(torch.nn.Module):
+    def __init__(self, in_features, out_features):
+
+        super(SAGENET, self).__init__()
+
+        self.relu = torch.nn.ReLU()
+
+        self.lin1 = torch.nn.Linear(in_features, 4096)
+        self.dropout1 = torch.nn.Dropout(p=0.2)
+
+        self.lin2 = torch.nn.Linear(4096, 2048)
+        self.dropout2 = torch.nn.Dropout(p=0.2)
+
+        self.sage1 = torch_geometric.nn.SAGEConv(2048, 1024, aggr="mean")
+        self.sage2 = torch_geometric.nn.SAGEConv(1024, out_features, aggr="mean")
+
+        self.softmax = torch.nn.Softmax()
+
+        self.out_features = out_features
+        self.in_features = in_features
+
+    def forward(self, data):
+        x, edge_index = data.x, data.edge_index
+
+        x = self.lin1(x)
+        x = self.relu(x)
+
+        x = self.lin2(x)
+        x = self.relu(x)
+
+        x = self.dropout1(x)
+
+        x = self.sage1(x, edge_index)
+        x = self.relu(x)
+
+        x = self.dropout2(x)
+
+        x = self.sage2(x, edge_index)
+        x = self.relu(x)
+
+        x = self.softmax(x)
+
+        return x
+
+# ----------------------- utility fuctions ----------------#
 def ConnectModule(module1, module2):
     newmodule = RNAModel(module1.in_features, module2.out_features)
     RNAModel.layers = torch.nn.Sequential(*(list(module1.layers.children()) + list(module2.layers.children())))

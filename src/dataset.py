@@ -4,12 +4,13 @@ import pandas as pd
 import numpy as np
 
 class GraphData_Hust:
-    def __init__(self):
+    def __init__(self, normalized=True):
         from HUST_dataprocess import NewHustData
         self.hust_data = NewHustData()
         x = self.hust_data.data
 
         labels = x.loc[:, "Label"].array
+        self.labels = labels
         self.num_classes = len(set(labels))
         self.class_weight = [0]*self.num_classes
         for i in labels:
@@ -22,6 +23,11 @@ class GraphData_Hust:
             y[i][labels[i]] = 1
         y = torch.tensor(y).float()
         x.drop("Label", axis=1, inplace=True)
+
+        if normalized:
+            for col in x.columns:
+                max = x[col].max()
+                x[col] = x[col] / max
         x = torch.tensor(x.to_numpy().astype(float)).float()
 
         try:
@@ -50,7 +56,7 @@ class GraphData_Hust:
         train_mask = [False]*self.num_node
         test_mask = [False]*self.num_node
         for i in range(self.num_node):
-            if np.random.rand() > 0.7:
+            if np.random.rand() > 0.8:
                 test_mask[i] = True
             else:
                 train_mask[i] = True
@@ -107,7 +113,7 @@ class GraphData_GSE:
         self.data.test_mask = torch.tensor(test_mask)
 
 if __name__ == '__main__':
-    t = GraphData_GSE()
+    t = GraphData_Hust()
     print(t)
 
 
