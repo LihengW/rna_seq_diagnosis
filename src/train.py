@@ -11,23 +11,23 @@ from svm_classifier import SVM
 
 class Program:
     def __init__(self,
+                 graph_data,
                  epoch=50000,
                  model=rna_model.GAT(),
                  criterion=torch.nn.CrossEntropyLoss(),
                  optimizer="SGD",
                  learning_rate=0.01,
-                 class_num=8,
                  program_name="program",
                  loss_weighted=True
                  ):
-        self.graph_data = dataset.GraphData_Hust()
+        self.graph_data = graph_data
         self.data = self.graph_data.data
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.data.to(self.device)
         self.epoch = epoch
         self.model = model
         self.model.to(self.device)
-        self.class_num = class_num
+        self.class_num = self.graph_data.num_classes
         # criterion = torch.nn.MSELoss(reduction='mean')  # Define loss criterion.
         if loss_weighted:
             weight_mask = {1: 1.5, 4: 1.5, 6: 1.5}
@@ -47,7 +47,7 @@ class Program:
             self.optimizer = torch.optim.Adam(self.model.parameters(), lr=learning_rate)
         else:
             raise NotImplementedError
-        self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=20)
+        self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=epoch*2)
         self.program_name = program_name
 
     def run(self):
@@ -86,13 +86,30 @@ class Program:
         acc = sum(acc) / len(acc)
         print(acc)
 
-    def svm_predict_raw(self):
+    def svm_predict_raw(self, save_fig=True):
         svm_model = SVM()
+        self.data = self.data.cpu()
+
         train_data = self.data.x[self.data.train_mask].detach().numpy()
-        target = self.graph_data.labels[self.data.train_mask.numpy()]
+        target = self.graph_data.labels[self.data.train_mask.numpy()].to_numpy(dtype=int)
         svm_model.fit(train_data, target)
         res = svm_model.pred(self.data.x[self.data.test_mask.numpy()].detach().numpy())
-        acc = res == self.graph_data.labels[self.data.test_mask.numpy()]
+        labels = self.graph_data.labels[self.data.test_mask.numpy()].to_numpy(dtype=int)
+        acc = res == labels
+
+        cm = np.zeros((self.class_num, self.class_num), dtype=int)
+        for x in range(len(res)):
+            idx_1, idx_2 = int(res[x]), int(labels[x])
+            cm[idx_1][idx_2] += 1
+
+        plot.plot_confusion_matrix(cm, range(self.class_num), title="SVM Result", cmap=plt.get_cmap('coolwarm'), show=not save_fig, normalize=True)
+        if save_fig:
+            plt.savefig("figs/" + self.program_name + "_SVM_Result" + ".png", bbox_inches='tight', dpi=400,
+                        transparent=False)
+            plt.clf()
+        else:
+            plt.show()
+
         acc = sum(acc) / len(acc)
         print(acc)
 
@@ -105,7 +122,7 @@ class Program:
         pred_top3 = torch.topk(out[self.data.test_mask], k=3, dim=1).indices # Use the class with highest probability.
         tar = self.data.y[self.data.test_mask].argmax(dim=1)
 
-        class_num = self.data.y[self.data.test_mask].size()[1]
+        class_num = self.class_num
         top1_hit, num, top3_hit = [0]*class_num, [0]*class_num, [0]*class_num
         for i in range(len(pre_top1)):
             if tar[i] == pre_top1[i]:
@@ -118,8 +135,9 @@ class Program:
             num[tar[i]] += 1
 
         for i in range(class_num):
-            top1_hit[i] = top1_hit[i] / num[i]
-            top3_hit[i] = top3_hit[i] / num[i]
+            if num[i] != 0:
+                top1_hit[i] = top1_hit[i] / num[i]
+                top3_hit[i] = top3_hit[i] / num[i]
 
         plt.scatter(list(range(class_num)), top1_hit, s=30, cmap=plt.get_cmap("plasma"), alpha=0.7)
         plt.scatter(list(range(class_num)), top3_hit, s=50, cmap=plt.get_cmap("inferno"), alpha=0.7)
@@ -272,6 +290,7 @@ class Program:
                 plt.clf()
             else:
                 plt.show()  # draw the fig
+
     def confusion_matrix(self, train_data=False, save_fig=False, normalized=False):
         self.model.eval()
         out = self.model(self.data)

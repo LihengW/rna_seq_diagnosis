@@ -85,7 +85,18 @@ class NewHustData:
         self.data.drop(columns="sampleId", inplace=True)
 
 if __name__ == '__main__':
-    hust_data = HUSTData()
-    hust_data.recover()
+    hust_data = NewHustData()
+    df = hust_data.data.drop(columns="Label")
+    df = df.iloc[:, :1000]
+    pearson = df.corr(method="pearson")
+    import seaborn as sns
+    import matplotlib.pyplot as plt
+    # 随机生成数据
+    print(pearson)
+    plt.rcParams['axes.unicode_minus'] = False
+    sns.heatmap(pearson, linewidths=0.1, square=True, linecolor='white', annot=True, cmap="Reds")
+    plt.title('Pearson')
+    plt.savefig("pearson.png")
+    print(pearson)
     # df_train, df_test, df_val = hust_data.generate()
     # hust_data.plot()

@@ -7,8 +7,8 @@ from utility.data_func import CancerTypeDic
 
 class GSEData:
     def __init__(self):
-        # self.data = pd.read_csv('F:/RNA_seq/RNAData/GSE/GSE68086_TEP_data_matrix.csv')
-        self.data = pd.read_csv('/RNAData/GSE/GSE_recon.csv')
+        self.data = pd.read_csv('RNAData/GSE/GSE68086_TEP_data_matrix.csv')
+        # self.data = pd.read_csv('/RNAData/GSE/GSE_recon.csv')
         self.data = self.data.T
         self.data.columns = self.data.loc["sampleId"]
         self.data.drop(labels="sampleId", inplace=True)
@@ -57,18 +57,42 @@ class GSEData:
             return self.cancer_type_dic.TypetoID("Unknown", dict_name)
 
     def plot(self):
-        x_list = list(range(10))
-        y_list = [0]*10
+        # x_list = list(range(10))
+        # y_list = [0]*10
+        # for row_id, row in self.data.iterrows():
+        #     index = row['Label']
+        #     y_list[index] += 1
+        # fig, ax = plt.subplots()
+        # ax.bar(x_list, y_list, width=1, edgecolor="white", linewidth=0.7, tick_label = [self.cancer_type_dic.IDtoType(x, "GSE") for x in range(10)])
+        # plt.show()
+
+        class_num = self.cancer_type_dic.GSE_class_num
+        x_list = list(range(class_num))
+        y_list = [0] * (class_num)
         for row_id, row in self.data.iterrows():
             index = row['Label']
             y_list[index] += 1
-        # plot
-        fig, ax = plt.subplots()
-        ax.bar(x_list, y_list, width=1, edgecolor="white", linewidth=0.7, tick_label = [self.cancer_type_dic.IDtoType(x, "GSE") for x in range(10)])
+        max = 0
+        for i in range(len(y_list)):
+            if max < y_list[i]:
+                max = y_list[i]
+        explode = [ max / (x*100) for x in y_list]
+
+        plt.figure(dpi=600)
+        plt.pie(x=y_list,
+                labels=[self.cancer_type_dic.IDtoType(x, "GSE") for x in range(class_num)],
+                explode=explode,
+                radius=1,
+                autopct='%.2f%%',
+                textprops={'fontsize': 3},
+                pctdistance=1.1,
+                labeldistance=1.2,
+                wedgeprops={'linestyle': '--', 'linewidth': 1}
+                )
+        plt.legend(loc='best', fontsize=2)
         plt.show()
 
 
 if __name__ == '__main__':
     gse_data = GSEData()
-    # df_train, df_test, df_val = gse_data.generate()
     gse_data.plot()

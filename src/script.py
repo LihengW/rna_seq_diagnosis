@@ -8,8 +8,12 @@ if torch.cuda.is_available():
 else:
     device = torch.device("cpu")
 
+public_gene = dataset.PublicGeneList().get()
 
-graph_data = dataset.GraphData_Hust()
+# graph_data = dataset.GraphData_Hust()
+# graph_data = dataset.GraphData_GSE68086()
+graph_data = dataset.GraphData_Hust(pearson_graph=True, person_index=0.6)
+
 learning_rate = [0.001, 0.005, 0.01]
 dropout = 0.25
 epochs = [150000, 200000, 300000]
@@ -35,42 +39,53 @@ programs = []
 # sage_mixed_thin = rna_model.MixedModel(mlp1, sage_thin)
 # create a set of mlp
 
-Sagenet = rna_model.SAGENET(in_features=graph_data.num_features, out_features=graph_data.num_classes)
+sage_net = rna_model.SAGENET_Slim(in_features=graph_data.num_features, out_features=graph_data.num_classes)
+
+Resnet = rna_model.ResGatedNET(in_features=graph_data.num_features, out_features=graph_data.num_classes)
+Resnet2 = rna_model.DeepResGatedNET(in_features=graph_data.num_features, out_features=graph_data.num_classes)
 
 for j in range(1):
-    name = "SageNet"
-    new_prog = Program(epoch=30000,
-                       model=Sagenet,
+    name = "SageNET_183635"
+    new_prog = Program(graph_data=graph_data,
+                       epoch=100000,
+                       model=sage_net,
                        learning_rate=0.001,
                        criterion=torch.nn.CrossEntropyLoss(),
                        program_name=name,
+                       loss_weighted=False,
                        optimizer="SGD")
     programs.append(new_prog)
+#    name = "ResGatedNet"
+#    new_prog = Program(epoch=30000,
+#                       model=Resnet,
+#                       learning_rate=0.001,
+#                       criterion=torch.nn.CrossEntropyLoss(),
+#                       program_name=name,
+#                       optimizer="SGD")
+#    programs.append(new_prog)
 
-    # name = "RESGATED"
-    # new_prog = Program(epoch=180000,
-    #                    model=resgated_mixed,
-    #                    learning_rate=0.00005,
+    # name = "ResGatedNet2"
+    # new_prog = Program(epoch=70000,
+    #                    model=Resnet2,
+    #                    learning_rate=0.0002,
     #                    criterion=torch.nn.CrossEntropyLoss(),
-    #                    program_name=name)
-    # programs.append(new_prog)
-    # name = "SAGE"
-    # new_prog = Program(epoch=120000,
-    #                    model=sage_mixed,
-    #                    learning_rate=0.0005,
-    #                    criterion=torch.nn.CrossEntropyLoss(),
-    #                    program_name=name)
+    #                    program_name=name,
+    #                    optimizer="SGD")
     # programs.append(new_prog)
 
-# for lr in learning_rate:
+    
 for prog in programs:
     prog.run()
-    prog.roc_curve(train_data=True,save_fig=True)
+    prog.roc_curve(train_data=True, save_fig=True)
     prog.confusion_matrix(train_data=True, save_fig=True, normalized=True)
     prog.draw_loss()
     prog.calculate_acc()
+    prog.svm_predict_raw()
+
     # print("svm_predict------------------")
     # prog.svm_predict()
     # print("raw_svm_predict------------------")
-    # prog.svm_predict_raw()
 
+
+
+#邻近点无训练预测

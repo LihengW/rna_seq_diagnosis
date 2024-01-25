@@ -457,15 +457,16 @@ class SAGENET(torch.nn.Module):
         super(SAGENET, self).__init__()
 
         self.relu = torch.nn.ReLU()
+        self.sigmoid = torch.nn.Sigmoid()
 
         self.lin1 = torch.nn.Linear(in_features, 4096)
-        self.dropout1 = torch.nn.Dropout(p=0.2)
+        self.dropout1 = torch.nn.Dropout(p=0.4)
+        self.dropout2 = torch.nn.Dropout(p=0.4)
 
         self.lin2 = torch.nn.Linear(4096, 2048)
-        self.dropout2 = torch.nn.Dropout(p=0.2)
 
-        self.sage1 = torch_geometric.nn.SAGEConv(2048, 1024, aggr="mean")
-        self.sage2 = torch_geometric.nn.SAGEConv(1024, out_features, aggr="mean")
+        self.sage1 = torch_geometric.nn.SAGEConv(2048, 2048, aggr="mean")
+        self.sage2 = torch_geometric.nn.SAGEConv(2048, out_features, aggr="mean")
 
         self.softmax = torch.nn.Softmax()
 
@@ -494,6 +495,210 @@ class SAGENET(torch.nn.Module):
         x = self.softmax(x)
 
         return x
+
+class SAGENET2(torch.nn.Module):
+    def __init__(self, in_features, out_features):
+
+        super(SAGENET, self).__init__()
+
+        self.relu = torch.nn.ReLU()
+        self.sigmoid = torch.nn.Sigmoid()
+
+        self.lin1 = torch.nn.Linear(in_features, 8192)
+        self.dropout1 = torch.nn.Dropout(p=0.5)
+        self.dropout2 = torch.nn.Dropout(p=0.5)
+
+        self.lin2 = torch.nn.Linear(8192, 4096)
+        self.lin3 = torch.nn.Linear(4096, 4096)
+
+        self.sage1 = torch_geometric.nn.SAGEConv(4096, 2048, aggr="mean")
+        self.sage2 = torch_geometric.nn.SAGEConv(2048, out_features, aggr="mean")
+
+        self.softmax = torch.nn.Softmax()
+
+        self.out_features = out_features
+        self.in_features = in_features
+
+    def forward(self, data):
+        x, edge_index = data.x, data.edge_index
+
+        x = self.lin1(x)
+        x = self.relu(x)
+
+        x = self.lin2(x)
+        x = self.relu(x)
+
+        x = self.lin3(x)
+        x = self.relu(x)
+
+        x = self.dropout1(x)
+
+        x = self.sage1(x, edge_index)
+        x = self.relu(x)
+
+        x = self.dropout2(x)
+
+        x = self.sage2(x, edge_index)
+        x = self.relu(x)
+
+        x = self.softmax(x)
+
+        return x
+
+
+class SAGENET_Slim(torch.nn.Module):
+    def __init__(self, in_features, out_features):
+        super(SAGENET_Slim, self).__init__()
+
+        self.relu = torch.nn.ReLU()
+        self.sigmoid = torch.nn.Sigmoid()
+
+        self.lin1 = torch.nn.Linear(in_features, 2048)
+        self.dropout1 = torch.nn.Dropout(p=0.4)
+        self.dropout2 = torch.nn.Dropout(p=0.4)
+
+        self.lin2 = torch.nn.Linear(2048, 1024)
+
+        self.sage1 = torch_geometric.nn.SAGEConv(1024, 512, aggr="mean")
+        self.sage2 = torch_geometric.nn.SAGEConv(512, out_features, aggr="mean")
+
+        self.softmax = torch.nn.Softmax()
+
+        self.out_features = out_features
+        self.in_features = in_features
+
+    def forward(self, data):
+        x, edge_index = data.x, data.edge_index
+
+        x = self.lin1(x)
+        x = self.relu(x)
+		
+        x = self.dropout1(x)
+
+        x = self.lin2(x)
+        x = self.relu(x)
+
+        x = self.dropout1(x)
+
+        x = self.sage1(x, edge_index)
+        x = self.relu(x)
+
+        x = self.dropout2(x)
+
+        x = self.sage2(x, edge_index)
+        x = self.relu(x)
+
+        x = self.softmax(x)
+
+        return x
+
+
+class ResGatedNET(torch.nn.Module):
+    def __init__(self, in_features, out_features):
+
+        super(ResGatedNET, self).__init__()
+
+        self.relu = torch.nn.ReLU()
+        self.sigmoid = torch.nn.Sigmoid()
+
+        self.lin1 = torch.nn.Linear(in_features, 4096)
+        self.dropout1 = torch.nn.Dropout(p=0.4)
+        self.dropout2 = torch.nn.Dropout(p=0.4)
+
+        self.lin2 = torch.nn.Linear(4096, 2048)
+
+        self.sage1 = torch_geometric.nn.ResGatedGraphConv(2048, 2048, act=torch.nn.Sigmoid())
+        self.sage2 = torch_geometric.nn.ResGatedGraphConv(2048, out_features, act=torch.nn.Sigmoid())
+
+        self.softmax = torch.nn.Softmax()
+
+        self.out_features = out_features
+        self.in_features = in_features
+
+    def forward(self, data):
+        x, edge_index = data.x, data.edge_index
+
+        x = self.lin1(x)
+        x = self.relu(x)
+
+        x = self.dropout1(x)
+
+        x = self.lin2(x)
+        x = self.relu(x)
+
+        x = self.dropout1(x)
+
+        x = self.sage1(x, edge_index)
+        x = self.relu(x)
+
+        x = self.dropout2(x)
+
+        x = self.sage2(x, edge_index)
+        x = self.relu(x)
+
+        x = self.dropout2(x)
+
+        x = self.softmax(x)
+
+        return x
+
+class DeepResGatedNET(torch.nn.Module):
+    def __init__(self, in_features, out_features):
+
+        super(DeepResGatedNET, self).__init__()
+
+        self.relu = torch.nn.ReLU()
+        self.sigmoid = torch.nn.Sigmoid()
+
+        self.lin1 = torch.nn.Linear(in_features, 4096)
+        self.dropout1 = torch.nn.Dropout(p=0.4)
+        self.dropout2 = torch.nn.Dropout(p=0.4)
+
+        self.lin2 = torch.nn.Linear(4096, 2048)
+
+        self.lin3 = torch.nn.Linear(2048, 512)
+
+        self.sage1 = torch_geometric.nn.ResGatedGraphConv(512, 256, act=torch.nn.Sigmoid())
+        self.sage2 = torch_geometric.nn.ResGatedGraphConv(256, out_features, act=torch.nn.Sigmoid())
+
+        self.softmax = torch.nn.Softmax()
+
+        self.out_features = out_features
+        self.in_features = in_features
+
+    def forward(self, data):
+        x, edge_index = data.x, data.edge_index
+
+        x = self.lin1(x)
+        x = self.relu(x)
+
+        x = self.dropout1(x)
+
+        x = self.lin2(x)
+        x = self.relu(x)
+
+        x = self.lin3(x)
+        x = self.relu(x)
+
+        x = self.dropout1(x)
+
+        x = self.sage1(x, edge_index)
+        x = self.relu(x)
+
+        x = self.dropout2(x)
+
+        x = self.sage2(x, edge_index)
+        x = self.relu(x)
+
+        x = self.dropout2(x)
+
+        x = self.softmax(x)
+
+        return x
+
+
+
+
 
 # ----------------------- utility fuctions ----------------#
 def ConnectModule(module1, module2):
